@@ -16,6 +16,14 @@ const App = ({notes}) => {
           <Note key = {note.id} note = {note}/>
         )}
       </ul>
+      
+      //! Hiển thị collection
+      <h3>version 3</h3>
+      <h3>
+        <ul>
+          {notes.map(note => <div key = {note.id}>{note.content}</div>)}
+        </ul>
+      </h3>
     </div>
   )
 }
