@@ -1,12 +1,41 @@
 import Note from './components/Note'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import axios from 'axios'
 
-const App = (props) => {
-  const [notes, setNotes] = useState(props.notes)
+//! trc khi sd axios => cần truyền props (notes) từ main.jsx
+//// const App = (props) => {
+////  const [notes, setNotes] = useState(props.notes)
+
+//! sau khi sd axios => ko cần truyền props nx 
+const App = () => {
+  const [notes, setNotes] = useState([])
   const [newNote, setNewNote] = useState('a new note ...')
   const [showAll, setShowAll] = useState(true)
   // const notesToShow = showAll ? notes : notes.filter(note => note.important === true)
   const notesToShow = showAll ? notes : notes.filter((note) => note.important)
+/*//! cách GÀ viết trc khi sd hook  
+  useEffect(()=> {
+    console.log('effect')
+    axios
+      .get('http://localhost:3001/notes')
+      .then(response => {
+        console.log('promise fullfilled')
+        setNotes(response.data)
+      })
+  },[])
+*/
+  //! cách PRO viết sau khi sd hook
+  const hook = () =>{
+    axios
+      .get('http://localhost:3001/notes')
+      .then(response =>{
+        setNotes(response.data)
+      })
+  }
+  useEffect(hook, []) //* tham số thứ 2 => tần suất chạy hiệu ứng
+
+
+  console.log('render',notes.length,'notes')
   // console.log('notesToShow',notesToShow)
   // console.log('showAll',showAll)
   // console.log('notes',notes)
@@ -28,7 +57,10 @@ const App = (props) => {
   }
   return (
     <div>
-      <h1>Notes</h1>
+
+      {
+      //! phan 2.1 => bỏ sau khi ko nhận dl từ main.jsx nx
+      /* <h1>Notes</h1>
       <h2>version 1</h2>
       <li>{notes[0].content}</li>
       <li>{notes[1].content}</li>
@@ -39,7 +71,8 @@ const App = (props) => {
         {notes.map(note =>
           <Note key = {note.id} note = {note}/>
         )}
-      </ul>
+      </ul> */
+      }
 
       <form onSubmit = {addNote}>
         <input value = {newNote} onChange={handleNoteChange}/> 

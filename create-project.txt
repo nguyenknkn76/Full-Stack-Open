@@ -1,8 +1,8 @@
-# npm 7+, extra double-dash is needed:
+# npm 7+, extra double-dash is needed ===================================================
 npm create vite@latest phonebook -- --template react
 
-//push code to github with TOKEN
-
+# GITHUB ================================================================================
+# push code to github with TOKEN
 git init
 git add .
 git commit -m "part 1 and intro part 2"
@@ -13,9 +13,16 @@ git push -u origin main
 
 https://www.youtube.com/watch?v=Xpu7s--Y7H4
 
-// commit code
+# commit code
 git add .
 git commit -m “second version”
 git push origin main
 
+# axios server ========================================================================
+npm install axios
+npm install json--server --save-dev
 
+// package.json thêm dòng lệnh sau vào "scripts"
+"server": "json-server -p3001 --watch db.json"
+
+npm run server
