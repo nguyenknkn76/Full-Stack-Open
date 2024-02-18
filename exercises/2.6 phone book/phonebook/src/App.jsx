@@ -4,6 +4,9 @@ import PersonForm from './components/PersonForm'
 import Filter from './components/Filter'
 import axios from 'axios'
 import { useEffect } from 'react'
+import phonebookService from './services/phonebook'
+import { v4 as uuidv4 } from 'uuid';
+
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
@@ -13,15 +16,35 @@ const App = () => {
   const [searchResults, setSearchResults] = useState([])
   
   //! nạp dl persons từ server
-  const hook = () => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        console.log(response)
-        setPersons(response.data)
+  const getAllPerson = () => {
+    phonebookService
+      .getAll()
+      .then(initialPersons => {
+        setPersons(initialPersons)
       })
   }
-  useEffect(hook,[])
+  useEffect(getAllPerson,[])
+  
+  const addNewPerson = (newPerson) => {
+    phonebookService
+      .addNew(newPerson)
+      .then(returnedPerson => {
+        setPersons(persons.concat(returnedPerson))
+        setNewName('')
+        setNewNumber('')
+      })
+  }
+
+  // const deletePersonById = (id) => {
+  //   axios
+  //     .delete(`http://localhost:3001/persons/${id}`)
+  //     .then(response => {
+  //       setPersons(persons.filter(person => person.id !== id))
+  //     })
+  //     .catch(error => {
+  //       console.error('Error deleting person:', error);
+  //     });
+  // }
 
   const checkExistName = (checkedName) => {
     let check = persons.some(person => person.name === checkedName)
@@ -34,19 +57,58 @@ const App = () => {
   const addNewPhonebook = (event) => {
     event.preventDefault()
     if (checkExistName(newName) || checkExistNumber(newNumber)){
-      alert(`${newName} is already added to phonebook`)
+      // alert(`${newName} is already added to phonebook`)
       // alert(newName + ' is already added to phonebook')
+      if(window.confirm(`${newName} is already added to phone book, replace the old number with a new one`)){
+        event.preventDefault()
+        const objectPerson = persons.find(person => person.name === newName || person.number ===newNumber)
+        const changedPerson = {
+          id: objectPerson.id,
+          name: newName,
+          number: newNumber
+        }
+        // axios
+        //   .put(`http://localhost:3001/persons/${changedPerson.id}`,changedPerson)
+        //   .then(response => {
+        //     setPersons(persons.map(person => person.id !== changedPerson.id ? person : changedPerson ))
+        //   })
+
+        phonebookService
+          .updateById(changedPerson.id,changedPerson)
+          .then(returnedPerson => {
+            console.log('here')
+            console.log(returnedPerson)
+            setPersons(persons.map(person => person.id !== returnedPerson.id ? person : returnedPerson ))
+          })
+      }
+
     } else{
+      event.preventDefault()
       const objectPerson = {
-        id: persons.length + 1,
+        id: uuidv4(),
         name: newName,
         number: newNumber,
       }
-      setPersons(persons.concat(objectPerson))
-      setNewName('')
-      setNewNumber('')
+      addNewPerson(objectPerson)
     }
   }
+  const deletePhonebook = (id) => {
+    console.log(`delete person have ${id} id`)
+    if(window.confirm('are you sure?')){
+      console.log('true')
+      const updatedPersons = persons.filter(person => person.id !==id)
+      // const updatedPersonsWithNewId = updatedPersons.map((person,index) => ({...person, id: index + 1}) )
+      phonebookService
+      .deleteById(id)
+      .then(() => {
+        setPersons(updatedPersons)
+      })
+      .catch(error => {
+        console.error('Error deleting person:', error)
+      })
+    }
+  }
+
   const handleNameChange = (event) => {
     setNewName(event.target.value)
   }
@@ -73,11 +135,27 @@ const App = () => {
       />
 
       <h3>Numbers</h3>
-      <Person persons = {persons}/>
-
+      {/* <Person persons = {persons} deletePhonebook = {deletePhonebook}/> */}
+      <ul>
+        {persons.map(person => 
+          <Person 
+            key={person.id}
+            person = {person} 
+            deletePhonebook={() => deletePhonebook(person.id)}
+          />
+        )}
+      </ul>
       <h3>Search results</h3>
       <Filter onChange = {handleSearchKeyChange} value = {searchKey}/>
-      <Person persons = {searchResults}/>
+      <ul>
+        {searchResults.map(person => 
+          <Person
+            key = {person.id}
+            person = {person}
+            deletePhonebook={()=>deletePhonebook(person.id)}
+          />
+        )}
+      </ul>
     </div>
   )
 }

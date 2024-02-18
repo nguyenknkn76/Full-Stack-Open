@@ -26,3 +26,36 @@ npm install json--server --save-dev
 "server": "json-server -p3001 --watch db.json"
 
 npm run server
+
+NOTE: nên tìm hiểu về promise (important, central to moderm JS development )
+
+
+
+
+
+
+sample data for phonebook:
+{
+  "persons":[
+      { 
+      "name": "Arto Hellas", 
+      "number": "040-123456",
+      "id": 1
+      },
+      { 
+      "name": "Ada Lovelace", 
+      "number": "39-44-5323523",
+      "id": 2
+      },
+      { 
+      "name": "Dan Abramov", 
+      "number": "12-43-234345",
+      "id": 3
+      },
+      { 
+      "name": "Mary Poppendieck", 
+      "number": "39-23-6423122",
+      "id": 4
+      }
+  ]
+}

@@ -1,11 +1,9 @@
-const PhoneNumber= ({person}) => {
-    return <li>{person.name} {person.number}</li>
-}
-const Person = ({persons}) => {
+const Person = ({person, deletePhonebook}) => {
     return(
-        <div>
-            <ul>{persons.map(person => <PhoneNumber key = {person.id} person = {person}/>)}</ul>
-        </div>
+        <li>
+            {person.id} : {person.name} : {person.number} 
+            <button onClick={deletePhonebook}> delete </button>
+        </li>
     )
 }
 export default Person
