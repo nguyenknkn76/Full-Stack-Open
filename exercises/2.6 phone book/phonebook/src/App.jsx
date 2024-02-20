@@ -6,7 +6,7 @@ import axios from 'axios'
 import { useEffect } from 'react'
 import phonebookService from './services/phonebook'
 import { v4 as uuidv4 } from 'uuid';
-
+import Notification from '../../../../part2/src/components/Notification'
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
@@ -14,7 +14,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [searchKey, setSearchKey] = useState('')
   const [searchResults, setSearchResults] = useState([])
-  
+  const [errorMessage, setErrorMessage] = useState(null)
   //! nạp dl persons từ server
   const getAllPerson = () => {
     phonebookService
@@ -30,6 +30,10 @@ const App = () => {
       .addNew(newPerson)
       .then(returnedPerson => {
         setPersons(persons.concat(returnedPerson))
+        setErrorMessage(`added ${newName} success`)
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 3000)
         setNewName('')
         setNewNumber('')
       })
@@ -67,6 +71,7 @@ const App = () => {
           name: newName,
           number: newNumber
         }
+        
         // axios
         //   .put(`http://localhost:3001/persons/${changedPerson.id}`,changedPerson)
         //   .then(response => {
@@ -79,6 +84,16 @@ const App = () => {
             console.log('here')
             console.log(returnedPerson)
             setPersons(persons.map(person => person.id !== returnedPerson.id ? person : returnedPerson ))
+            setErrorMessage(`update ${returnedPerson.name} success`)
+            setTimeout(() => {
+              setErrorMessage(null)
+            }, 3000)
+          })
+          .catch(error => {
+            setErrorMessage(`this persons was already deleted from database`)
+            setTimeout(() => {
+              setErrorMessage(null)
+            },3000)
           })
       }
 
@@ -102,6 +117,10 @@ const App = () => {
       .deleteById(id)
       .then(() => {
         setPersons(updatedPersons)
+        setErrorMessage(`delete success`)
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 3000)
       })
       .catch(error => {
         console.error('Error deleting person:', error)
@@ -122,9 +141,10 @@ const App = () => {
     const results = persons.filter(person => person.name.toLowerCase().includes(searchTerm.toLowerCase()))
     setSearchResults(results)
   }
-
+  
   return (
     <div>
+      <Notification message={errorMessage}/>
       <h1>Phonebook</h1>
       <PersonForm
         handleNameChange={handleNameChange}

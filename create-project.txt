@@ -1,5 +1,5 @@
 # npm 7+, extra double-dash is needed ===================================================
-npm create vite@latest phonebook -- --template react
+npm create vite@latest countries-info -- --template react
 
 # GITHUB ================================================================================
 # push code to github with TOKEN
@@ -29,7 +29,10 @@ npm run server
 
 NOTE: nên tìm hiểu về promise (important, central to moderm JS development )
 
-
+# uuidv4
+npm install uuid
+import { v4 as uuidv4 } from 'uuid';
+syntax: uuidv4()
 
 
 

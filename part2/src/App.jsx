@@ -2,7 +2,21 @@ import Note from './components/Note'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import noteService from'./services/Notes'
+import Notification from './components/Notification'
 
+const Footer = () => {
+  const footerStyle = {
+    color: 'green',
+    fontStyle: 'italic',
+    fontSize: 16
+  }
+  return (
+    <div style={footerStyle}>
+      <br />
+      <em>Note app, Department of Computer Science, University of Helsinki 2024</em>
+    </div>
+  )
+}
 //! trc khi sd axios => cần truyền props (notes) từ main.jsx
 //// const App = (props) => {
 ////  const [notes, setNotes] = useState(props.notes)
@@ -12,6 +26,7 @@ const App = () => {
   const [notes, setNotes] = useState([])
   const [newNote, setNewNote] = useState('enter-a-new-note')
   const [showAll, setShowAll] = useState(true)
+  const [errorMessage, setErrorMessage] = useState('some error happened ...')
   // const notesToShow = showAll ? notes : notes.filter(note => note.important === true)
   const notesToShow = showAll ? notes : notes.filter((note) => note.important)
 /*//! cách GÀ viết trc khi sd hook  
@@ -49,7 +64,7 @@ const App = () => {
     const note = notes.find(n => n.id === id)
     const changedNote = {...note, important: !note.important}
     console.log(`importance ${id} needs to be toggled`)
-
+    
     // axios
     //   .put(url,changedNote)
     //   .then(response => {
@@ -63,6 +78,12 @@ const App = () => {
         setNotes(notes.map(note => note.id !== id ? note : returnedNote))
       })
       .catch(error => {
+        setErrorMessage(
+          `Note '${note.content}' was already removed from server`
+        )
+        setTimeout(() => {
+          setErrorMessage(null)
+        },  5000)
         alert(`the note '${note.content}' was already deleted from server`)
         setNotes(notes.filter(n => n.id !== id))
       })
@@ -103,6 +124,7 @@ const App = () => {
       })
     
   }
+  // if(!notes){return null}
   return (
     <div>
 
@@ -129,6 +151,7 @@ const App = () => {
       </form>
 
       <h3>note to show</h3>
+      <Notification message={errorMessage}/>
       <div>
         <button onClick={() => setShowAll(!showAll)}>show {showAll ? 'important' : 'all'}</button>
       </div>
@@ -143,6 +166,7 @@ const App = () => {
           )}
         </ul>
       </div>
+      <Footer/>
       {/*//! Hiển thị Collection */}
       {/* <h3>version 3</h3>
       <h3>

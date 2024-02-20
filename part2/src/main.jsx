@@ -2,7 +2,9 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App'
+import App2 from './App2'
 import axios from 'axios'
+import './index.css'
 
 //! có thể loại bỏ phần tìm nạp dl từ main.jsx do TRUY XUẤT các ghi chú từ SERVER
 //! nên ko cần truyền dl dưới dạng đạo cụ cho App components nữa
@@ -47,5 +49,7 @@ import axios from 'axios'
 // console.log(result2)
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <App notes/>
+  // <App/>
+  <App2/>
+    
 )
