@@ -8,17 +8,17 @@
     {
       "id": "2",
       "content": "Browser can execute only JavaScript",
-      "important": false
+      "important": true
     },
     {
       "id": "3",
       "content": "changed-content-check",
-      "important": false
+      "important": true
     },
     {
       "id": "4",
       "content": "POST is used to add data",
-      "important": false
+      "important": true
     }
   ]
 }
