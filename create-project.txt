@@ -1,5 +1,5 @@
 # npm 7+, extra double-dash is needed ===================================================
-npm create vite@latest countries-info -- --template react
+npm create vite@latest part3 -- --template react
 
 # GITHUB ================================================================================
 # push code to github with TOKEN
@@ -29,11 +29,24 @@ npm run server
 
 NOTE: nên tìm hiểu về promise (important, central to moderm JS development )
 
-# uuidv4
+# uuidv4 ===================================================
 npm install uuid
 import { v4 as uuidv4 } from 'uuid';
 syntax: uuidv4()
 
+# learing be with EXPRESS ===============================================
+npm init 
+
+npm install express
+//not important: npm update, npm install
+
+npm install --save-dev nodemon
+// scripts: "dev" : "nodemon index.js"
+
+// instsallation morgan: $ npm install morgan
+
+# CORS =====================================================================
+npm install cors
 
 
 

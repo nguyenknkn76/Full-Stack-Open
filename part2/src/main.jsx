@@ -49,7 +49,7 @@ import './index.css'
 // console.log(result2)
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  // <App/>
-  <App2/>
+  <App/>
+  // <App2/>
     
 )

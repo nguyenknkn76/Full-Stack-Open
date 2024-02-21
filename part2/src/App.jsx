@@ -64,7 +64,7 @@ const App = () => {
     const note = notes.find(n => n.id === id)
     const changedNote = {...note, important: !note.important}
     console.log(`importance ${id} needs to be toggled`)
-    
+    console.log(changedNote)
     // axios
     //   .put(url,changedNote)
     //   .then(response => {
