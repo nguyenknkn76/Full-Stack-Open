@@ -46,8 +46,24 @@ npm install --save-dev nodemon
 // instsallation morgan: $ npm install morgan
 
 # CORS =====================================================================
-npm install cors
+backend: npm install cors
 
+### Aplication to the internet with RENDER =================================
+# frontend production build ================================================
+frontend: 
+  npm run build
+  copy -r dist ../backend
+
+scripts:
+  {
+    "scripts": {
+      //...
+      "build:ui": "rm -rf dist && cd ../frontend && npm run build && cp -r dist ../backend",
+      "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push"
+    }
+  }
+  //this scripts in "part3b exerciese phonebook 3.9-3.11" is not true
+  // ==>> need to be fixed after
 
 
 sample data for phonebook:

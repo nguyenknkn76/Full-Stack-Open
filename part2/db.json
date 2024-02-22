@@ -3,7 +3,7 @@
     {
       "id": "1",
       "content": "HTML is easy",
-      "important": false
+      "important": true
     },
     {
       "id": "2",
@@ -13,12 +13,12 @@
     {
       "id": "3",
       "content": "changed-content-check",
-      "important": true
+      "important": false
     },
     {
       "id": "4",
       "content": "POST is used to add data",
-      "important": true
+      "important": false
     }
   ]
 }

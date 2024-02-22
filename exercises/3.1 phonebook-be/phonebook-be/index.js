@@ -2,6 +2,10 @@ const express = require('express')
 const app = express()
 
 app.use(express.json()) //! the way that middleware taken into use
+app.use(express.static('dist'))
+//! import cors mechanism (cross-origin resource sharing)
+const cors = require('cors')
+app.use(cors())
 
 //! config morgan
 const morgan = require('morgan')
@@ -97,9 +101,11 @@ app.post('/api/persons',(req,res)=> {
     }
     persons = persons.concat(person)
     res.json(person)
+    console.log(req.body)
     
 })
-const PORT = 3001
+// const PORT = 3001
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
     console.log(`server running on port ${PORT}`)
 })

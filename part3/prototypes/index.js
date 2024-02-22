@@ -34,6 +34,8 @@ const app = express()
 
 app.use(cors())
 app.use(express.json())
+app.use(express.static('dist'))
+
 let notes = [
     {
         id: 1,
@@ -116,9 +118,9 @@ app.post('/api/notes',(request, response)=>{
 //     const newNotes =  notes.map(note => note.id !== id ? note : updatedNote)
 //     notes = newNotes
 // })
-
+// app.use(unknownEndpoint)
 // const PORT = 3001
-const PORT = process.env.port || 3001
+const PORT = process.env.PORT || 3001
 app.listen(PORT, ()=> {
     console.log(`server is running on port ${PORT}`)
 })
