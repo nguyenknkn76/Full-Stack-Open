@@ -1,5 +1,7 @@
 const express = require('express')
 const app = express()
+require('dotenv').config() 
+const Person = require('./models/Person')
 
 app.use(express.json()) //! the way that middleware taken into use
 app.use(express.static('dist'))
@@ -51,21 +53,22 @@ app.get('/',(req, res)=> {
     res.send("<h1>Hello World</h1>")
 })
 app.get('/api/persons',(req, res) => {
-    res.json(persons)
+    // res.json(persons)
+    Person.find({}).then(persons => {
+        res.json(persons)
+    })
 })
 app.get('/info',(req,res)=>{
     const currentDate = new Date()
     console.log(currentDate)
-    res.send(`<p>phonebook has info for ${persons.length} people</p><br/><p>${currentDate}</p>`)
+    Person.find({}).then(persons => {
+        res.send(`<p>phonebook has info for ${persons.length} people</p><br/><p>${currentDate}</p>`)
+    })
 })
 app.get('/api/persons/:id',(req,res)=>{
-    const id = Number(req.params.id)
-    const person = persons.find(person => person.id === id)
-    if(person){
+    Person.findById(req.params.id).then(person =>{
         res.json(person)
-    }else{
-        res.status(404).end()
-    }
+    })
 })
 //!DELETE method
 app.delete('/api/persons/:id',(req,res)=>{
@@ -94,18 +97,18 @@ app.post('/api/persons',(req,res)=> {
     if(!checkExist(reqName)){
         return res.status(400).json({error: "name must be unique"})
     }
-    const person = {
-        id: generateId(),
+    const person = new Person({
         name: reqName,
         number: reqNumber
-    }
-    persons = persons.concat(person)
-    res.json(person)
+    })
+    person.save().then(savedPerson =>{
+        res.json(savedPerson)
+    })
     console.log(req.body)
     
 })
 // const PORT = 3001
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT
 app.listen(PORT, () => {
     console.log(`server running on port ${PORT}`)
 })

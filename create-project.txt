@@ -65,7 +65,12 @@ scripts:
   //this scripts in "part3b exerciese phonebook 3.9-3.11" is not true
   // ==>> need to be fixed after
 
+MONGO DB ==========================================================================
+install driver: npm install mongodb@4.0
+add connection string into application code
+mongodb+srv://nguyenknkn76:<password>@nguyen-cluster.hkp3hcw.mongodb.net/?retryWrites=true&w=majority&appName=nguyen-cluster
 
+backend: npm install mongoose
 sample data for phonebook:
 {
   "persons":[
