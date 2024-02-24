@@ -65,16 +65,29 @@ app.get('/info',(req,res)=>{
         res.send(`<p>phonebook has info for ${persons.length} people</p><br/><p>${currentDate}</p>`)
     })
 })
-app.get('/api/persons/:id',(req,res)=>{
-    Person.findById(req.params.id).then(person =>{
-        res.json(person)
-    })
+
+app.get('/api/persons/:id',(req,res,next)=>{
+    Person.findById(req.params.id)
+        .then(person =>{
+            if(person){
+                res.json(person)
+            }else{
+                res.status(404).end()
+            }
+        })
+        .catch(error => next(error))
 })
+
 //!DELETE method
-app.delete('/api/persons/:id',(req,res)=>{
-    const id = Number(req.params.id)
-    persons = persons.filter(person => person.id !== id)
-    res.status(204).end()
+app.delete('/api/persons/:id',(req,res,next)=>{
+    // const id = Number(req.params.id)
+    // persons = persons.filter(person => person.id !== id)
+    // res.status(204).end()
+    Person.findByIdAndDelete(req.params.id)
+        .then(result => {
+            res.status(204).end()
+        })
+        .catch(error => next(error))
 })
 //!POST method
 const generateId = () => {
@@ -84,29 +97,58 @@ const generateId = () => {
     return maxId + 1
 }
 const checkExist = (name) => {
-    const person = persons.find(person => person.name === name)
-    if(person) return false
-    else return true
+    Person.find({name: name}).then(persons =>{
+        return persons.length
+    })
 }
+
 app.post('/api/persons',(req,res)=> {
     const reqName = req.body.name
     const reqNumber = req.body.number
     if(!reqName || !reqNumber){
-        return res.status(400).json({error: 'missing attribute'});
+        return res.status(400).json({error: 'missing attribute'})
     }
-    if(!checkExist(reqName)){
-        return res.status(400).json({error: "name must be unique"})
+    if(checkExist(reqName) === 0 ){
+        return res.status(400).json({error: 'name must be unique'})
     }
     const person = new Person({
         name: reqName,
         number: reqNumber
     })
-    person.save().then(savedPerson =>{
+    person.save().then(savedPerson => {
         res.json(savedPerson)
     })
     console.log(req.body)
-    
+}) 
+
+//! PUT method
+app.put('/api/persons/:id', (req, res, next)=>{
+    const id = req.params.id
+    const updatedPerson = req.body
+
+    Person.findByIdAndUpdate(id, updatedPerson, {new: true})
+        .then(updated =>{
+            if(updated){
+                res.json(updated)
+            }else{
+                res.status(404).end()
+            }
+        })
+        .catch(error => next(error))
 })
+
+//! ERROR handler middleware
+const unknownEndpoint = (req,res) =>{
+    res.status(404).send({error: 'Unknown Endpoint'})
+}
+app.use(unknownEndpoint)
+const errorHandler = (err, req, res, next) =>{
+    console.error(err.message)
+    if(err.name === 'CastError'){ return res.status(404).send({error: "malformated id"})}
+    next(err)
+}
+app.use(errorHandler)
+
 // const PORT = 3001
 const PORT = process.env.PORT
 app.listen(PORT, () => {

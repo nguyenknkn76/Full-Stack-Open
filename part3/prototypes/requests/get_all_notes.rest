@@ -18,6 +18,6 @@ content-type: application/json
     "time": "Wed, 21 Oct 2015 18:27:50 GMT"
 }
 ###
-DELETE http://localhost:3001/api/notes/6
+DELETE http://localhost:3001/api/notes/65d8d4f46bb1a7bbe1906215
 ###
 ### test choi choi 

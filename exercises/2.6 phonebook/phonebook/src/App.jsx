@@ -107,6 +107,7 @@ const App = () => {
       addNewPerson(objectPerson)
     }
   }
+  
   const deletePhonebook = (id) => {
     console.log(`delete person have ${id} id`)
     if(window.confirm('are you sure?')){
