@@ -89,6 +89,7 @@ app.delete('/api/persons/:id',(req,res,next)=>{
         })
         .catch(error => next(error))
 })
+
 //!POST method
 const generateId = () => {
     const maxId = persons.length > 0
@@ -102,15 +103,15 @@ const checkExist = (name) => {
     })
 }
 
-app.post('/api/persons',(req,res)=> {
+app.post('/api/persons',(req, res, next)=> {
     const reqName = req.body.name
     const reqNumber = req.body.number
-    if(!reqName || !reqNumber){
-        return res.status(400).json({error: 'missing attribute'})
-    }
-    if(checkExist(reqName) === 0 ){
-        return res.status(400).json({error: 'name must be unique'})
-    }
+    // if(!reqName || !reqNumber){
+    //     return res.status(400).json({error: 'missing attribute'})
+    // }
+    // if(checkExist(reqName) === 0 ){
+    //     return res.status(400).json({error: 'name must be unique'})
+    // }
     const person = new Person({
         name: reqName,
         number: reqNumber
@@ -118,6 +119,7 @@ app.post('/api/persons',(req,res)=> {
     person.save().then(savedPerson => {
         res.json(savedPerson)
     })
+    .catch(error => next(error))
     console.log(req.body)
 }) 
 
@@ -126,7 +128,10 @@ app.put('/api/persons/:id', (req, res, next)=>{
     const id = req.params.id
     const updatedPerson = req.body
 
-    Person.findByIdAndUpdate(id, updatedPerson, {new: true})
+    Person.findByIdAndUpdate(
+        id, 
+        updatedPerson, 
+        {new: true})
         .then(updated =>{
             if(updated){
                 res.json(updated)
@@ -145,6 +150,7 @@ app.use(unknownEndpoint)
 const errorHandler = (err, req, res, next) =>{
     console.error(err.message)
     if(err.name === 'CastError'){ return res.status(404).send({error: "malformated id"})}
+    else if(err.name ==='ValidationError'){return res.status(400).json({error: `this is ERROR ${err.message}`})}
     next(err)
 }
 app.use(errorHandler)

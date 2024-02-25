@@ -17,7 +17,13 @@ mongoose.connect(url)
     })
 
 const noteSchema = new mongoose.Schema({
-    content: String,
+    // content: String,
+    //! validate data before save it in database
+    content:{
+        type: String,
+        minLength: 5,
+        require: true,
+    },
     important: Boolean,
 })
 

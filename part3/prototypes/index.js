@@ -87,6 +87,7 @@ app.get('/',(request,response)=>{
     response.send('<h1>Hello World!</h1>')
 })
 app.get('/api/notes',(request,response)=>{
+    
     // response.json(notes)
     Note.find({}).then(notes => {   //todo use mongodb
         response.json(notes)
@@ -164,12 +165,13 @@ const generateId = () => {
 //     // console.log(request.headers) //! sd để check header trong lúc debug
 // })
 
-app.post('/api/notes', (request, response) => {
+app.post('/api/notes', (request, response, next) => {
     const body = request.body
     
-    if (body.content === undefined) {
-        return response.status(400).json({ error: 'content missing' })
-    }
+    // if (body.content === undefined) {
+    //     return response.status(400).json({ error: 'content missing' })
+    // }
+    
     const note = new Note({
         content: body.content,
         important: body.important || false,
@@ -177,16 +179,22 @@ app.post('/api/notes', (request, response) => {
     note.save().then(savedNote => {
         response.json(savedNote)
     })
+    .catch(error => next(error))
 })
 
 //!PUT method
 app.put('/api/notes/:id',(request,response, next)=>{
-    const body =request.body
+    const {content, important} = request.body
+
     const note = {
         content: body.content,
         important: body.important
     }
-    Note.findByIdAndUpdate(request.params.id, note , {new:true})
+    Note.findByIdAndUpdate(
+        request.params.id, 
+        {content, important} , //! updated note
+        {new:true, runValidators: true, context:'query'}
+    )
         .then(updatedNote => {
             response.json(updatedNote)
         })
@@ -213,6 +221,7 @@ app.use(unknownEndpoint)
 const errorHandler = (error, request, response, next) =>{
     console.error(error.message)
     if(error.name ==="CastError"){ return response.status(404).send({error:'malformatted id'})}
+    else if(error.name ==="ValidationError"){return response.status(400).json({error: error.message})}
     next(error)
 }
 app.use(errorHandler)

@@ -36,6 +36,16 @@ const App = () => {
         }, 3000)
         setNewName('')
         setNewNumber('')
+    
+      })
+      .catch(error =>{
+        console.log(error)
+        const displayError = error.response.data.error
+        console.log('display error: ', displayError)
+        setErrorMessage(displayError)
+        setTimeout(()=>{
+          setErrorMessage(null)
+        }, 3000)
       })
   }
 
